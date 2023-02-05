@@ -1,0 +1,57 @@
+
+body{
+    background-color: rgb(232, 238, 234);
+   /* width:calc(100%-12px); */
+}
+.rowCustum{
+    margin-right: 0px!important;
+    width:102% ;
+   
+}
+.colCustum{
+    padding-right:0px!important;
+}
+header{
+    background-image: linear-gradient(darkblue,rgb(13, 72, 91), rgb(79, 79, 184));
+    /* padding: 0px 0px 6px 0px; */
+    margin-bottom: 6px;
+    color: white;
+    text-align: center;
+    padding-right: 0px;
+}
+form{
+    margin-left: 5px;
+    padding-bottom: 6px;
+    border-style: none none solid none;
+}
+.weatherDisplay{
+ 
+  }
+.weatherSearch{
+  
+}
+.weather_card{
+    background-color: rgb(26, 26, 66);
+    color: aliceblue;
+    min-width: 100px;
+   
+}
+.firstDay{
+    background-color: rgb(97, 127, 117);
+    border-style: solid;
+    /* margin-left: 20px; */
+    color: aliceblue;
+}
+
+
+/* .rowCustum{
+    padding-right: 0px;
+    margin: 0px;
+} */
+
+.historyBtns{
+    margin-left: 5px;
+}
+*{
+    margin: 0px;
+}
