@@ -4,7 +4,7 @@ var searchButton=document.querySelector('#searchButton');
 var searchHistoryDiv=document.querySelector('.search_history');
 var today=dayjs();
 var stordHistory=JSON.parse(localStorage.getItem('history'));
-
+//This function will retrive search history from local storage and render it on the page
 function renderSearchHistory(histArray) {
   if (stordHistory==null) {
     stordHistory=[];
@@ -20,31 +20,31 @@ function renderSearchHistory(histArray) {
     }
   }
 }
-
+//this function will recive weather data from other function and render it on the page . HTML elements will be created
 function printWeather(resultObj) {
   // console.log(resultObj);
 
   // set up `<div>` to hold result content
- weatherDisplayDiv.innerHTML="";
+ weatherDisplayDiv.innerHTML="";//clear content firest
 
   var firstDayCard = document.createElement('div');
-  firstDayCard.classList.add('row','rowCustum');
+  firstDayCard.classList.add('row','me-0');
 
   var firstDayCardBody = document.createElement('div');
-  firstDayCardBody.classList.add('col-11', 'col-sm-11', 'firstDay');
+  firstDayCardBody.classList.add('col-12', 'col-sm-12', 'firstDay');
   
-  var titleEl1=document.createElement('h2');
+  var titleEl1=document.createElement('h3');
   titleEl1.innerHTML=resultObj.dates[0] + '('+ resultObj.cityName +')'+"<img src="+ resultObj.iconlink[0]+ '>'
-  //  var history=JSON.parse(localStorage.getItem('history'));
   
   
+  //city searched will be stored to local storage as a history if it is not already there 
   if (!stordHistory.includes(resultObj.cityName)) {
      stordHistory.push(resultObj.cityName);
      localStorage.setItem('history', JSON.stringify(stordHistory));
      renderSearchHistory(stordHistory)
   }
  
-
+ //create elements and reander currnt day weather data
   var temp1=document.createElement('div');
   temp1.textContent='Temp: '+resultObj.temprature[0]+' F';
 
@@ -55,21 +55,21 @@ function printWeather(resultObj) {
   humidity1.textContent='Humidity: '+ resultObj.humidity[0]+ ' %';
 
   var forcastTitle=document.createElement('h2');
-  forcastTitle.classList.add('row','rowCustum');
+  forcastTitle.classList.add('row');
   forcastTitle.textContent='5 day forcast:'
 
   var forcastContainer=document.createElement('div');
-  forcastContainer.classList.add('row','rowCustum', 'grid', 'gap-1')
+  forcastContainer.classList.add('row', 'grid', 'gap-1','me-0')
 
 
   weatherDisplayDiv.append(firstDayCard,forcastTitle,forcastContainer);
   firstDayCard.append(firstDayCardBody);
   firstDayCardBody.append(titleEl1, temp1, Wind1, humidity1);
  
-  
+  //create elements and redner 5 day forcast
   for (let i = 1; i < 6; i++) {
     var weatherCard=document.createElement('div');
-    weatherCard.classList.add('col-4', 'col-sm-2', 'weather_card');
+    weatherCard.classList.add('col-12', 'col-sm-2', 'weather_card');
 
     
     var weatherCardTitle=document.createElement('h6');
@@ -97,9 +97,32 @@ function printWeather(resultObj) {
   }
 
 }
+//This function will take city name as an imput and and provide lat and lon coordinates to displayWeather function.
+function getCityWeather(city) {
+  var apiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + city + '&lang=en&limit=6&appid=54428a3033ba3a4a495f5ecae31e7843';
 
+  fetch(apiUrl).then(function (response) {
+    if (response.ok) {
+      response.json().then(function (data) {
+        console.log(data)
+       for (let i = 0; i < data.length; i++) {
+        
+          if (data[i].name.toUpperCase()===city.toUpperCase()) {
+            let lat=data[i].lat;
+            let lon=data[i].lon;
+            displayWeather( lat,lon)
+            return;
+          }
+        }
+        
+        
+      });
+    }
+  });
+}
+//This functin will get weather data from for given lat and lon of a city. Then it will calculate the average of 3hourly samples for each day so that it will be displayed on on card per day.
 function displayWeather( lat,lon){
-  var apiUrl='https://api.openweathermap.org/data/2.5/forecast?lat='+lat+'&lon='+lon+'&units=imperial&appid=54428a3033ba3a4a495f5ecae31e7843';
+  var apiUrl='https://api.openweathermap.org/data/2.5/forecast?lat='+lat+'&lon='+lon+'&units=imperial&lang=en&appid=54428a3033ba3a4a495f5ecae31e7843';
   fetch(apiUrl).then(function (response) {
     if (response.ok) {
       response.json().then(function (data) {
@@ -193,37 +216,9 @@ function displayWeather( lat,lon){
   });
 
 }
-
-function getCityWeather(city) {
-    var apiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + city + '&lang=en&limit=6&appid=54428a3033ba3a4a495f5ecae31e7843';
-  
-    fetch(apiUrl).then(function (response) {
-      if (response.ok) {
-        response.json().then(function (data) {
-          console.log(data)
-         for (let i = 0; i < data.length; i++) {
-          
-          if (data[i].name.toUpperCase()===city.toUpperCase()) {
-            let lat=data[i].lat;
-            let lon=data[i].lon;
-            displayWeather( lat,lon)
-            return;
-          }
-          
-         }
-          
-          
-          if (response.headers.get('Link')) {
-           
-            // displayWarning(repo);
-          }
-        });
-      }
-    });
-}
-
+//this will render history buttons for each searched city from lolal storage
 renderSearchHistory(stordHistory);
-
+//this will capture city name input and call getCityWeather function  
 searchButton.addEventListener('click',(event)=>{
   event.preventDefault();
 
@@ -236,7 +231,7 @@ searchButton.addEventListener('click',(event)=>{
   getCityWeather(cityName);
   
 } )
-
+//this will listen to historicaly searched buttons an call getCityWeather function
 searchHistoryDiv.addEventListener('click',(event)=>{
   var element=event.target;
   var cityHistory=element.textContent;
