@@ -191,7 +191,7 @@ function displayWeather( lat,lon){
               temprature6=(temprature6 + data.list[i].main.temp);
               //console.log(temprature6)
               wind6 =(wind6 + data.list[i].wind.speed);
-              humidity6=(humidity5 + data.list[i].main.humidity);
+              humidity6=(humidity6 + data.list[i].main.humidity);
               day6sample++;
             }
           
